@@ -129,6 +129,8 @@ function appMain(app)
     elseif (app.drawXZ == true)
         view(app.UIAxes,[0 0]);
     end
+
+    view(app.UIAxes,[0 90]);
     
     if(app.drawRM == true)
         for (iterator = 2:1:length(bod))
