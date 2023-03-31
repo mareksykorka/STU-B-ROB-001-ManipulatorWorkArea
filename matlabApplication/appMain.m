@@ -35,38 +35,72 @@ function appMain(app)
     xy_iter = 1;
     krok = 5;
     
-    for(phi1_local = app.phi1_min:krok:app.phi1_max)
-        xy(1:4,xy_iter) = 0;
-        for(phi2_local = app.phi2_min:krok:0)
-            for(phi3_local = app.phi3_min:krok:app.phi3_max)
-                Ct(1:4) = (appRobRotate(app,'z','deg',phi1_local)*appRobTranslate(app,'z',app.l1)*appRobRotate(app,'y','deg',phi2_local)*appRobTranslate(app,'z',app.l2)*appRobRotate(app,'y','deg',phi3_local)*appRobTranslate(app,'z',app.l3)*bod(:,1));
-                Ct(5) = sqrt(Ct(1)*Ct(1)+Ct(2)*Ct(2));
-                if(xy(4,xy_iter) < Ct(5))
-                    xy(1:2,xy_iter) = Ct(1:2);
-                    xy(3,xy_iter) = app.l1;
-                    xy(4,xy_iter) = Ct(5);
-                end
-            end
-        end
+    xy = zeros(5,360/krok);
+    
+    for (i = 0:5:360)
+        xy(5,xy_iter) = i;
         xy_iter = xy_iter + 1;
     end
     
     for(phi1_local = app.phi1_min:krok:app.phi1_max)
-        xy(1:4,xy_iter) = 0;
-        for(phi2_local = 0:krok:app.phi2_max)
+        for(phi2_local = app.phi2_min:krok:app.phi2_max)
             for(phi3_local = app.phi3_min:krok:app.phi3_max)
                 Ct(1:4) = (appRobRotate(app,'z','deg',phi1_local)*appRobTranslate(app,'z',app.l1)*appRobRotate(app,'y','deg',phi2_local)*appRobTranslate(app,'z',app.l2)*appRobRotate(app,'y','deg',phi3_local)*appRobTranslate(app,'z',app.l3)*bod(:,1));
                 Ct(5) = sqrt(Ct(1)*Ct(1)+Ct(2)*Ct(2));
-                if(xy(4,xy_iter) < Ct(5))
-                    xy(1:2,xy_iter) = Ct(1:2);
-                    xy(3,xy_iter) = app.l1;
-                    xy(4,xy_iter) = Ct(5);
+                Ct(6) = atan2(Ct(2),Ct(1));
+                Ct(6) = round(rad2deg(Ct(6)),0);
+                if Ct(6) < 0
+                    Ct(6) = Ct(6) + 360;
+                end
+    
+                I = find(xy(5,:) == Ct(6));
+                if(xy(4,I) < Ct(5))
+                    xy(1:2,I) = Ct(1:2);
+                    xy(3,I) = app.l1;
+                    xy(4,I) = Ct(5);
                 end
             end
         end
-        xy_iter = xy_iter + 1;
     end
-    xy(1:4,xy_iter)=xy(1:4,1);
+    xy(1:4,end)=xy(1:4,1);
+
+
+%     xy_iter = 1;
+%     krok = 5;
+%     
+%     for(phi1_local = app.phi1_min:krok:app.phi1_max)
+%         xy(1:4,xy_iter) = 0;
+%         for(phi2_local = app.phi2_min:krok:0)
+%             for(phi3_local = app.phi3_min:krok:app.phi3_max)
+%                 Ct(1:4) = (appRobRotate(app,'z','deg',phi1_local)*appRobTranslate(app,'z',app.l1)*appRobRotate(app,'y','deg',phi2_local)*appRobTranslate(app,'z',app.l2)*appRobRotate(app,'y','deg',phi3_local)*appRobTranslate(app,'z',app.l3)*bod(:,1));
+%                 Ct(5) = sqrt(Ct(1)*Ct(1)+Ct(2)*Ct(2));
+%                 Ct(6) = asin(Ct(1)/Ct(5));
+%                 if(xy(4,xy_iter) < Ct(5) && (Ct(6) < 90 && Ct(6) > -90))
+%                     xy(1:2,xy_iter) = Ct(1:2);
+%                     xy(3,xy_iter) = app.l1;
+%                     xy(4,xy_iter) = Ct(5);
+%                 end
+%             end
+%         end
+%         xy_iter = xy_iter + 1;
+%     end
+%     
+%     for(phi1_local = app.phi1_min:krok:app.phi1_max)
+%         xy(1:4,xy_iter) = 0;
+%         for(phi2_local = 0:krok:app.phi2_max)
+%             for(phi3_local = app.phi3_min:krok:app.phi3_max)
+%                 Ct(1:4) = (appRobRotate(app,'z','deg',phi1_local)*appRobTranslate(app,'z',app.l1)*appRobRotate(app,'y','deg',phi2_local)*appRobTranslate(app,'z',app.l2)*appRobRotate(app,'y','deg',phi3_local)*appRobTranslate(app,'z',app.l3)*bod(:,1));
+%                 Ct(5) = sqrt(Ct(1)*Ct(1)+Ct(2)*Ct(2));
+%                 if(xy(4,xy_iter) < Ct(5) && (Ct(6) > 90 && Ct(6) < -90))
+%                     xy(1:2,xy_iter) = Ct(1:2);
+%                     xy(3,xy_iter) = app.l1;
+%                     xy(4,xy_iter) = Ct(5);
+%                 end
+%             end
+%         end
+%         xy_iter = xy_iter + 1;
+%     end
+%     xy(1:4,xy_iter)=xy(1:4,1);
     
     xz_iter = 1;
     krok = 5;
@@ -158,6 +192,7 @@ function appMain(app)
     if(app.drawXY == true)
         fill3(app.UIAxes,xy(1,:),xy(2,:),xy(3,:),'r','EdgeColor','none','FaceColor','red','FaceAlpha','0.2')
         plot3(app.UIAxes,xy(1,:),xy(2,:),xy(3,:),'Color','red','LineWidth',2)
+        plot3(app.UIAxes,xy(1,:),xy(2,:),xy(3,:),'ok')
     end
 
     if(app.drawXZ == true)
