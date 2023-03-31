@@ -6,5 +6,5 @@ function rob_sphere(radius, base)
     y = y * radius;
     z = z * radius;
 
-    surf(x+base(1),y+base(2),z+base(3),'EdgeColor','black','FaceColor','black')
+    surf(app.UIAxes,x+base(1),y+base(2),z+base(3),'EdgeColor','black','FaceColor','black')
 end
