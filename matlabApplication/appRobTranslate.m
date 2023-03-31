@@ -1,4 +1,4 @@
-function outputMatrix = rob_translate(~, axis, d)%, inputMatrix)
+function outputMatrix = appRobTranslate(~, axis, d)%, inputMatrix)
     translationMatrix = eye(4);
 
     switch axis

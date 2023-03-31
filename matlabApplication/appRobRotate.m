@@ -1,4 +1,4 @@
-function outputMatrix = rob_rotate(~, axis, type, rotation)
+function outputMatrix = appRobRotate(~, axis, type, rotation)
     rotationMatrix = eye(4);
 
     switch type
