@@ -38,7 +38,7 @@ function appMain(app)
     xy = zeros(5,360/krok);
     
     for (i = 0:krok:360)
-        xy(5,xy_iter) = i;
+        xy(:,xy_iter) = [0;0;app.l1;0;i];
         xy_iter = xy_iter + 1;
     end
     
@@ -52,23 +52,38 @@ function appMain(app)
                 if Ct(6) < 0
                     Ct(6) = Ct(6) + 360;
                 end
-                
+    
                 I = find(xy(5,:) == Ct(6));
-
+    
                 if(xy(4,I) < Ct(5))
-                    xy(1:2,I) = Ct(1:2);
-                    xy(3,I) = app.l1;
-                    xy(4,I) = Ct(5);
-                end
-
+                    xy(:,I) = [Ct(1);Ct(2);app.l1;Ct(5);Ct(6)];
+                end 
             end
         end
     end
     xy(1:4,end)=xy(1:4,1);
 
-    for (i = 1:1:length(xy))
-        if(xy(4,i) == 0)
-            xy(3,i) = app.l1;
+    if(app.phi1_max+abs(app.phi1_min) >= 180)
+        for (uhol = [app.phi1_min,app.phi1_max])
+            uhol = mod(uhol, 360);
+            I = find(xy(5,:) == uhol);
+            val = xy(:,I-1:I+1);
+    
+            [M,Is] = min(val(4,:));
+            smallest = val(:,Is);
+            [M,Im] = max(val(4,:));
+            biggest = val(:,Im);
+    
+            x = smallest(4)*cos(deg2rad(uhol));
+            y = smallest(4)*sin(deg2rad(uhol));
+    
+            valIn = [x;y;app.l1;smallest(4);val(5,2)];
+            
+            if(xy(4,I-1) < xy(4,I))
+                xy = [xy(:,1:I-1), valIn, xy(:,I:end)];
+            else
+                xy = [xy(:,1:I), valIn, xy(:,I+1:end)];
+            end
         end
     end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -133,8 +148,6 @@ function appMain(app)
     elseif (app.drawXZ == true)
         view(app.UIAxes,[0 0]);
     end
-
-    view(app.UIAxes,[0 90]);
     
     if(app.drawRM == true)
         for (iterator = 2:1:length(bod))
@@ -162,7 +175,6 @@ function appMain(app)
     if(app.drawXY == true)
         fill3(app.UIAxes,xy(1,:),xy(2,:),xy(3,:),'r','EdgeColor','none','FaceColor','red','FaceAlpha','0.2')
         plot3(app.UIAxes,xy(1,:),xy(2,:),xy(3,:),'Color','red','LineWidth',2)
-        plot3(app.UIAxes,xy(1,:),xy(2,:),xy(3,:),'ok')
     end
 
     if(app.drawXZ == true)
