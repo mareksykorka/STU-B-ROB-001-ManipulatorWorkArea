@@ -36,10 +36,15 @@ function appMain(app)
     krok = 5;
     
     xy = zeros(5,360/krok);
+    xy_b = zeros(4);
     
     for (i = 0:krok:360)
         xy(5,xy_iter) = i;
         xy_iter = xy_iter + 1;
+    end
+    uhol = app.phi1_min;
+    if uhol < 0
+        uhol = uhol + 360;
     end
     
     for(phi1_local = app.phi1_min:krok:app.phi1_max)
@@ -61,16 +66,49 @@ function appMain(app)
                     xy(4,I) = Ct(5);
                 end
 
+                if(phi2_local > (app.phi2_max-app.phi2_min))
+                    xy_b = xy(:,I);
+                end                
             end
         end
     end
     xy(1:4,end)=xy(1:4,1);
+%     nuly = false;
 
     for (i = 1:1:length(xy))
         if(xy(4,i) == 0)
             xy(3,i) = app.l1;
+%             nuly = true;
         end
     end
+
+% if(nuly == false)
+%     val = zeros(5,1);
+%     uhol = app.phi1_min;
+%     if uhol < 0
+%         uhol = uhol + 360;
+%     end
+%     I = find(xy(5,:) == (uhol));
+%     if(xy(4,I) ~= xy(4,I-1))
+%         theta_rad = deg2rad(xy(5,I));
+%         val(1,1) = xy(4,I-1)*cos(theta_rad);
+%         val(2,1) = xy(4,I-1)*sin(theta_rad);
+%         val(3,1) = app.l1;
+%         xy = [xy(:,1:I-1),val,xy(:,I:end)]
+%     end
+%     uhol = app.phi1_max;
+%     if uhol < 0
+%         uhol = uhol + 360;
+%     end
+%     I = find(xy(5,:) == (uhol));
+%     if(xy(4,I) ~= xy(4,I-1))
+%         theta_rad = deg2rad(xy(5,I));
+%         val(1,1) = xy(4,I+1)*cos(theta_rad);
+%         val(2,1) = xy(4,I+1)*sin(theta_rad);
+%         val(3,1) = app.l1;
+%         xy = [xy(:,1:I),val,xy(:,I+1:end)]
+%     end
+% end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     xz_iter = 1;
     krok = 5;
