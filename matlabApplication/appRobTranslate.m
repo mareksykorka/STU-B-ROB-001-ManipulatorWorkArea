@@ -1,3 +1,4 @@
+% Returns the TRANSLATION matrix with specified parameters.
 function outputMatrix = appRobTranslate(~, axis, d)%, inputMatrix)
     translationMatrix = eye(4);
 

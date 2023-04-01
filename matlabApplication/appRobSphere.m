@@ -1,3 +1,4 @@
+% Encapsulates the surf function of native matlab for better code readability to draw spheres.
 function appRobSphere(~, drawLocation, radius, base)
     % Make unit sphere
     [x,y,z] = sphere;
