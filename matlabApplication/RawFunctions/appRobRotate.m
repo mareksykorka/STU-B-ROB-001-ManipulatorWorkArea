@@ -23,10 +23,10 @@ function outputMatrix = appRobRotate(~, axis, type, rotation)
             rotationMatrix(3,1) = -sin(rad);
             rotationMatrix(3,3) = cos(rad);
         case 'z'
-            rotationMatrix(1,1) = cos((pi/2)-rad);
-            rotationMatrix(1,2) = -sin((pi/2)-rad);
-            rotationMatrix(2,1) = sin((pi/2)-rad);
-            rotationMatrix(2,2) = cos((pi/2)-rad);
+            rotationMatrix(1,1) = cos(rad);
+            rotationMatrix(1,2) = -sin(rad);
+            rotationMatrix(2,1) = sin(rad);
+            rotationMatrix(2,2) = cos(rad);
     end
     
      outputMatrix = rotationMatrix;

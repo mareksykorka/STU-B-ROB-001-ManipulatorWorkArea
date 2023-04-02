@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="4214150227" file="G:\Môj disk\002 - Vysoká škola - STU\4.Semester - L - 2022 - 2023 - Bc\B-ROB\004 - Domáce úlohy\001 - Zadanie\002_Matlab\001_ROB_MATLAB_RoboticManipulator\matlabApplication\Model of Angular Robotic Manipulator.prj" location="G:\Môj disk\002 - Vysoká škola - STU\4.Semester - L - 2022 - 2023 - Bc\B-ROB\004 - Domáce úlohy\001 - Zadanie\002_Matlab\001_ROB_MATLAB_RoboticManipulator\matlabApplication" name="Model of Angular Robotic Manipulator" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="1566650402" file="G:\Môj disk\002 - Vysoká škola - STU\4.Semester - L - 2022 - 2023 - Bc\B-ROB\004 - Domáce úlohy\001 - Zadanie\002_Matlab\001_ROB_MATLAB_RoboticManipulator\matlabApplication\Model of Angular Robotic Manipulator.prj" location="G:\Môj disk\002 - Vysoká škola - STU\4.Semester - L - 2022 - 2023 - Bc\B-ROB\004 - Domáce úlohy\001 - Zadanie\002_Matlab\001_ROB_MATLAB_RoboticManipulator\matlabApplication" name="Model of Angular Robotic Manipulator" target="target.mlapps" target-name="Package App">
     <param.appname>Model of Angular Robotic Manipulator</param.appname>
     <param.authnamewatermark>Marek Sýkorka</param.authnamewatermark>
     <param.email>xsykorka@stuba.sk</param.email>
@@ -14,7 +14,7 @@ with its working area. You can also move the robotic manipulator.
 -----------------------------------------------------------------------------
 Dependencies
 - Core Matlab - (eye, deg2rad, sin, cos, sqrt, figure, ?lim, ?label, plot3, fill)</param.description>
-    <param.screenshot>${PROJECT_ROOT}\Icon.png</param.screenshot>
+    <param.screenshot>C:\Users\Marek Sýkorka\AppData\Local\Temp\tp2c8be1cd_4da7_4e7f_9292_5b27d7bc93b3.png</param.screenshot>
     <param.version>1.1</param.version>
     <param.products.name />
     <param.products.id />
