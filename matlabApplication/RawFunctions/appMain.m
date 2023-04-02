@@ -137,11 +137,11 @@ function appMain(app)
     %     zlim([-100 600]);
     
     if(app.orientationLock == false)
-        if((app.drawRM == true)||(app.drawRM == true && app.drawXY == true && app.drawXZ == true))
+        if((app.drawRM == true)||(app.drawRM == true && app.drawXY == true && app.drawABC == true))
              view(app.UIAxes,[40 30]);
         elseif (app.drawXY == true)
              view(app.UIAxes,[0 90]);
-        elseif (app.drawXZ == true)
+        elseif (app.drawABC == true)
              view(app.UIAxes,[90 0]);
         end
     end
@@ -167,7 +167,7 @@ function appMain(app)
         plot3(app.UIAxes,xy(1,:),xy(2,:),xy(3,:),'Color','red','LineWidth',2)
     end
 
-    if(app.drawXZ == true)
+    if(app.drawABC == true)
         % Vykreslenie pracovného priestoru ABC - XZ
         fill3(app.UIAxes,xz(1,:),xz(2,:),xz(3,:),'b','EdgeColor','none','FaceColor','blue','FaceAlpha','0.2')
         plot3(app.UIAxes,xz(1,:),xz(2,:),xz(3,:),'Color','blue','LineWidth',2)
