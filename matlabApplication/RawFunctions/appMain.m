@@ -59,9 +59,7 @@ function appMain(app)
                 Ct(1:4) = (appRobRotate(app,'z','deg',phi1_local)*appRobTranslate(app,'z',app.l1)*appRobRotate(app,'y','deg',phi2_local)*appRobTranslate(app,'z',app.l2)*appRobRotate(app,'y','deg',phi3_local)*appRobTranslate(app,'z',app.l3)*bod(:,1));
                 Ct(5) = sqrt(Ct(1)*Ct(1)+Ct(2)*Ct(2));
                 if(xy(4,xy_iter) < Ct(5))
-                    xy(1:2,xy_iter) = Ct(1:2);
-                    xy(3,xy_iter) = app.l1;
-                    xy(4,xy_iter) = Ct(5);
+                    xy(:,xy_iter) = [Ct(1);Ct(2);app.l1;Ct(5)];
                 end
             end
         end
@@ -75,9 +73,7 @@ function appMain(app)
                 Ct(1:4) = (appRobRotate(app,'z','deg',phi1_local)*appRobTranslate(app,'z',app.l1)*appRobRotate(app,'y','deg',phi2_local)*appRobTranslate(app,'z',app.l2)*appRobRotate(app,'y','deg',phi3_local)*appRobTranslate(app,'z',app.l3)*bod(:,1));
                 Ct(5) = sqrt(Ct(1)*Ct(1)+Ct(2)*Ct(2));
                 if(xy(4,xy_iter) < Ct(5))
-                    xy(1:2,xy_iter) = Ct(1:2);
-                    xy(3,xy_iter) = app.l1;
-                    xy(4,xy_iter) = Ct(5);
+                    xy(:,xy_iter) = [Ct(1);Ct(2);app.l1;Ct(5)];
                 end
             end
         end
@@ -92,8 +88,8 @@ function appMain(app)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     xz_iter = 1;
     krokXZ = 5;
-    phi1_local = 0;
-    
+
+    phi1_local = 0;    
     phi2_local = app.phi2_min;
     for(phi3_local = app.phi3_min:krokXZ:app.phi3_max)
         Ct(1:4) = (appRobRotate(app,'z','deg',phi1_local)*appRobTranslate(app,'z',app.l1)*appRobRotate(app,'y','deg',phi2_local)*appRobTranslate(app,'z',app.l2)*appRobRotate(app,'y','deg',phi3_local)*appRobTranslate(app,'z',app.l3)*bod(:,1));
