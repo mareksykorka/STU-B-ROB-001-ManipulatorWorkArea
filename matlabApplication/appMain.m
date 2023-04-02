@@ -46,81 +46,48 @@ function appMain(app)
     xy_iter = 1;
     krokXY = 5;
 
-    % Inicializacia xy pola
-    xy = zeros(5,360/krokXY);
-    for (i = 0:krokXY:360)
-        xy(:,xy_iter) = [0;0;app.l1;0;i];
-        xy_iter = xy_iter + 1;
-    end
-
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Algoritmus pre výpočet XY pracovného priestoru, prepočítaním 
-    % vzdialenosti vektoru XY od počiatku [0,0,app.l1] so zaznamenávaním si len 
-    % významných bodov, ktorých vzdialenosť od počiatku je väčšia ako v 
+    % vzdialenosti vektoru XY od počiatku [0,0,app.l1] so zaznamenávaním si 
+    % len významných bodov, ktorých vzdialenosť od počiatku je väčšia ako v 
     % danom uhle zaznamenaná.
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     for(phi1_local = app.phi1_min:krokXY:app.phi1_max)
-        for(phi2_local = app.phi2_min:krokXY:app.phi2_max)
+        xy(1:4,xy_iter) = 0;
+        for(phi2_local = app.phi2_min:krokXY:0)
             for(phi3_local = app.phi3_min:krokXY:app.phi3_max)
                 Ct(1:4) = (appRobRotate(app,'z','deg',phi1_local)*appRobTranslate(app,'z',app.l1)*appRobRotate(app,'y','deg',phi2_local)*appRobTranslate(app,'z',app.l2)*appRobRotate(app,'y','deg',phi3_local)*appRobTranslate(app,'z',app.l3)*bod(:,1));
                 Ct(5) = sqrt(Ct(1)*Ct(1)+Ct(2)*Ct(2));
-    
-                Ct(6) = atan2(Ct(2),Ct(1));
-                Ct(6) = round(rad2deg(Ct(6)),0);
-                if Ct(6) < 0
-                    Ct(6) = Ct(6) + 360;
+                if(xy(4,xy_iter) < Ct(5))
+                    xy(1:2,xy_iter) = Ct(1:2);
+                    xy(3,xy_iter) = app.l1;
+                    xy(4,xy_iter) = Ct(5);
                 end
-    
-                I = find(xy(5,:) == Ct(6));
-                if(xy(4,I) < Ct(5))
-                    xy(:,I) = [Ct(1);Ct(2);app.l1;Ct(5);Ct(6)];
-                end 
             end
         end
+        xy_iter = xy_iter + 1;
     end
-    % Doplnenie poľa dát, tak aby dáta boli "spojené", aby bolo
-    % zobrazovanie krajšie.
-    xy(1:4,end) = xy(1:4,1);
-
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % Úprava zozbieraných dát pre zlepšenie vizualizácie.
-    %
-    % Keďže výstupom algoritmu pre získanie pracovného priestoru XY sú
-    % jednotlivé body v určitých unikátne definovaných uhloch pri grafickom
-    % zobrazení daných uhlov vzniká problém, kde spojí body v uhle 90 a 95
-    % priamou čiarou, teda sa javí akoby manipulátor mal väčší pracovný
-    % priestor ako má reálne. Preto dopočítame body vnútornej kruižnice. 
-    % Daná úprava taktiež nie je úplne perfektná.
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    if(app.phi1_max+abs(app.phi1_min) >= 180)
-        for (uhol = [app.phi1_min,app.phi1_max])
-            uhol = mod(uhol, 360);
-            % Nájdenie hraničného bodu
-            I = find(xy(5,:) == uhol);
-            val = xy(:,I-1:I+1);
     
-            [M,Is] = min(val(4,:));
-            smallest = val(:,Is);
-            [M,Im] = max(val(4,:));
-            biggest = val(:,Im);
-            % Výpočet chýbajúceho bodu
-            x = smallest(4)*cos(deg2rad(uhol));
-            y = smallest(4)*sin(deg2rad(uhol));
-    
-            valIn = [x;y;app.l1;smallest(4);val(5,2)];
-            % Dosadenie dát do poľa dát pre zobrazovanie
-            if(xy(4,I-1) < xy(4,I))
-                xy = [xy(:,1:I-1), valIn, xy(:,I:end)];
-            else
-                xy = [xy(:,1:I), valIn, xy(:,I+1:end)];
+    for(phi1_local = app.phi1_min:krokXY:app.phi1_max)
+        xy(1:4,xy_iter) = 0;
+        for(phi2_local = 0:krokXY:app.phi2_max)
+            for(phi3_local = app.phi3_min:krokXY:app.phi3_max)
+                Ct(1:4) = (appRobRotate(app,'z','deg',phi1_local)*appRobTranslate(app,'z',app.l1)*appRobRotate(app,'y','deg',phi2_local)*appRobTranslate(app,'z',app.l2)*appRobRotate(app,'y','deg',phi3_local)*appRobTranslate(app,'z',app.l3)*bod(:,1));
+                Ct(5) = sqrt(Ct(1)*Ct(1)+Ct(2)*Ct(2));
+                if(xy(4,xy_iter) < Ct(5))
+                    xy(1:2,xy_iter) = Ct(1:2);
+                    xy(3,xy_iter) = app.l1;
+                    xy(4,xy_iter) = Ct(5);
+                end
             end
         end
+        xy_iter = xy_iter + 1;
     end
-
+    xy(1:4,xy_iter)=xy(1:4,1);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % Výpočet pracovného priestoru ABC - XZ
+    % Výpočet pracovného priestoru ABC - YZ
     %
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     xz_iter = 1;
@@ -173,12 +140,14 @@ function appMain(app)
     %     ylim([-400 400]);
     %     zlim([-100 600]);
     
-    if((app.drawRM == true)||(app.drawRM == true && app.drawXY == true && app.drawXZ == true))
-         view(app.UIAxes,[40 30]);
-    elseif (app.drawXY == true)
-         view(app.UIAxes,[0 90]);
-    elseif (app.drawXZ == true)
-         view(app.UIAxes,[90 0]);
+    if(app.orientationLock == false)
+        if((app.drawRM == true)||(app.drawRM == true && app.drawXY == true && app.drawXZ == true))
+             view(app.UIAxes,[40 30]);
+        elseif (app.drawXY == true)
+             view(app.UIAxes,[0 90]);
+        elseif (app.drawXZ == true)
+             view(app.UIAxes,[90 0]);
+        end
     end
     
     if(app.drawRM == true)
