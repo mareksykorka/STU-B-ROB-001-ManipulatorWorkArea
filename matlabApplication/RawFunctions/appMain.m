@@ -137,11 +137,17 @@ function appMain(app)
     %     zlim([-100 600]);
     
     if(app.orientationLock == false)
-        if((app.drawRM == true)||(app.drawRM == true && app.drawXY == true && app.drawABC == true))
-             view(app.UIAxes,[130 30]);
+        if(app.drawRM == true && app.drawXY == true && app.drawABC == true)
+            title(app.UIAxes,"Robotic manipulator and his working areas");
+            view(app.UIAxes,[130 30]);
+        elseif((app.drawRM == true))
+            title(app.UIAxes,"Robotic manipulator");
+            view(app.UIAxes,[130 30]);
         elseif (app.drawXY == true)
+            title(app.UIAxes,"XY working area");
              view(app.UIAxes,[0 90]);
         elseif (app.drawABC == true)
+            title(app.UIAxes,"XZ working area");
              view(app.UIAxes,[90 0]);
         end
     end
